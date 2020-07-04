@@ -20,7 +20,7 @@ object UncFileUtil {
       val files = listFiles(target)
 
       files.foreach { file =>
-        println(new Date(file.lastModified()) + "\t" + file.getAbsolutePath)
+        println(new Date(file.lastModified()).toString + "\t" + file.getAbsolutePath)
       }
     }
   }
@@ -54,7 +54,7 @@ object UncFileUtil {
         Breaks.breakable {
           while (true) {
             val p = new Memory(WIN32_FIND_DATA.sizeOf())
-            if (!Kernel32.INSTANCE.FindNextFile(hnd, p)) Breaks.break
+            if (!Kernel32.INSTANCE.FindNextFile(hnd, p)) Breaks.break()
             appendToBuffer(p)
           }
         }
@@ -73,7 +73,7 @@ object UncFileUtil {
     def NetApiBufferFree(buffer: Pointer): Int
   }
 
-  private val Netapi32: Netapi32 = Native.loadLibrary("netapi32", classOf[Netapi32], W32APIOptions.DEFAULT_OPTIONS)
+  private val Netapi32: Netapi32 = Native.load("netapi32", classOf[Netapi32], W32APIOptions.DEFAULT_OPTIONS)
 
   def listNetShares(server: String): List[String] = {
     val bufPtr = new PointerByReference
